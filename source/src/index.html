@@ -1,0 +1,166 @@
+<title>Loose Leaf</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Rubik+Scribble&display=swap">
+<style>
+/*STYLE*/
+</style>
+
+<div id="app" class="m-desk">
+  <header class="hud">
+    <div class="hearts" id="hearts" role="img" aria-label="Health"></div>
+    <div class="scrapbox" title="Scraps found">
+      <canvas id="thumb" width="92" height="58" aria-hidden="true"></canvas>
+      <span id="scrapTxt">0 / 12</span>
+    </div>
+    <div class="where" id="where"></div>
+    <span class="chip" id="layerChip" hidden>Front</span>
+    <button class="pausebtn" id="btnPause" aria-label="Pause and show the map" title="Pause and show the map (Esc)">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4.6" y="3.6" width="3.8" height="12.8" rx="1.1"/><rect x="11.6" y="3.6" width="3.8" height="12.8" rx="1.1"/></svg>
+      <span>Pause</span>
+    </button>
+  </header>
+
+  <main class="stage">
+    <div class="pad padl" id="padL">
+      <div class="dpad" id="dpad">
+        <button class="tb tb-dir" data-dir="-1" aria-label="Move left" tabindex="-1">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 5.5 L8.5 14.2 L18.4 22.6"/></svg>
+        </button>
+        <button class="tb tb-dir" data-dir="1" aria-label="Move right" tabindex="-1">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.5 L19.5 13.8 L9.6 22.6"/></svg>
+        </button>
+        <button class="tb tb-dir tb-down dim" data-dir="0" aria-label="Drop down through a ledge" tabindex="-1">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 10 L14 19.5 L22.5 10"/><path d="M5 23.5 H23" stroke-width="2.2" stroke-dasharray="3 3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="page" id="page">
+      <div class="rings"></div>
+      <canvas id="screen" aria-label="Loose Leaf game screen"></canvas>
+      <div class="toasts" id="toasts" aria-live="polite"></div>
+    </div>
+
+    <p class="sideways" id="sideways">Turn your phone sideways for a bigger page.</p>
+
+    <div class="pad padr" id="padR">
+      <button class="tb tb-flip locked" data-act="flip" tabindex="-1" aria-label="Flip the page">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path d="M6 4.5 H17.5 L23 10 V23.5 H6 Z" fill="#fff"/><path d="M17.5 4.5 V10 H23" fill="#f3aaa2"/></svg>
+        <span>Flip</span>
+      </button>
+      <button class="tb tb-dash locked" data-act="dash" tabindex="-1" aria-label="Ink dash">
+        <svg class="ic-dash" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M3 9.5 H13 M2.5 14.5 H16 M3.5 19.5 H12"/><path d="M19 9 C24.5 11 25.5 18 19.5 20.5 C17 18 17 12 19 9 Z" fill="#23315e" stroke-linejoin="round"/></svg>
+        <svg class="ic-mag" viewBox="0 0 28 28" fill="none"><path d="M8 4 V14 A6 6 0 0 0 20 14 V4" stroke="currentColor" stroke-width="7.4"/><path d="M8 9 V14 A6 6 0 0 0 20 14 V9" stroke="#d64538" stroke-width="4.4"/><path d="M8 5 V9 M20 5 V9" stroke="#e8ebf0" stroke-width="4.4"/></svg>
+        <span class="lb-dash">Dash</span><span class="lb-mag">Zip</span>
+      </button>
+      <button class="tb tb-erase locked" data-act="erase" tabindex="-1" aria-label="Erase">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round"><g transform="rotate(-24 14 14)"><rect x="4" y="9" width="20" height="10.5" rx="2" fill="#fff"/><path d="M12.5 9 V19.5" /><rect x="4" y="9" width="8.5" height="10.5" rx="2" fill="#5d86de"/></g></svg>
+        <span>Erase</span>
+      </button>
+      <button class="tb tb-jump" data-act="jump" tabindex="-1" aria-label="Jump">
+        <svg class="ic-jump" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 23 V7 M7 13.5 L14 6.2 L21 13.5"/></svg>
+        <svg class="ic-draw" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linejoin="round" stroke-linecap="round"><path d="M4.5 23.5 L6.5 17.5 L18.5 5.5 L22.5 9.5 L10.5 21.5 Z" fill="#ffe14a"/><path d="M6.5 17.5 L10.5 21.5 M16.3 7.7 L20.3 11.7"/><path d="M4.5 23.5 L7.8 22.4 L5.6 20.2 Z" fill="currentColor"/></svg>
+        <svg class="ic-glide" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M25 9 L3 5 L10 12 Z" fill="#fff"/><path d="M25 9 L10 12 L6 19 Z" fill="#d9dcef"/><path d="M5 23 H15 M9 26 H19" stroke-linecap="round" stroke-width="1.6"/></svg>
+        <span class="lb-jump">Jump</span><span class="lb-draw">Draw</span><span class="lb-glide">Glide</span>
+      </button>
+    </div>
+  </main>
+
+  <footer class="keys" id="keys"></footer>
+</div>
+
+<section class="sheet" id="sheetTitle">
+  <div class="leaf">
+    <h1 class="logo"><span>Loose Leaf</span></h1>
+    <div class="titlegrid">
+      <div>
+        <p class="lede">You're a little doodle, and somebody tore your drawing into twelve scraps and scattered them through the sketchbook.</p>
+        <p>Find the tools that open up new pages, collect every scrap, and put the picture back together.</p>
+        <div class="row">
+          <button class="btn primary" id="btnPlay">Start</button>
+          <button class="btn" id="btnNew" hidden>New game</button>
+        </div>
+        <div class="row chapters" id="chapters">
+          <span class="small">Level select:</span>
+        </div>
+        <p class="small" id="titleHint"></p>
+      </div>
+      <figure style="margin:0">
+        <canvas id="titlePic" width="480" height="300" aria-label="Your drawing so far"></canvas>
+        <figcaption class="picnote" id="titlePicNote">0 of 12 scraps</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="sheet" id="sheetMenu" hidden>
+  <div class="leaf">
+    <div class="menuhead">
+      <h2>Paused</h2>
+      <button class="btn primary" id="btnResume">Resume</button>
+    </div>
+    <h3 id="mapTitle">Map</h3>
+    <canvas id="mapCanvas" aria-label="Map of the rooms you've visited"></canvas>
+    <ul class="maplegend">
+      <li><i class="lg-you"></i>You</li>
+      <li><i class="lg-scrap"></i>Scrap still out there</li>
+      <li><i class="lg-power"></i>Tool</li>
+      <li><i class="lg-book"></i>Bookmark</li>
+      <li><i class="lg-unseen"></i>Not visited yet</li>
+    </ul>
+    <div class="menugrid">
+      <div>
+        <h3>The drawing</h3>
+        <canvas id="menuPic" width="480" height="300" aria-label="Your drawing so far"></canvas>
+        <p class="small" id="menuPicNote"></p>
+      </div>
+      <div>
+        <h3>Settings</h3>
+        <div class="toggles">
+          <button class="btn switch" id="tglMusic" aria-pressed="true">Music: on</button>
+          <button class="btn switch" id="tglSound" aria-pressed="true">Sound effects: on</button>
+        </div>
+        <p class="small nowplaying" id="nowPlaying"></p>
+        <div class="row">
+          <button class="btn" id="btnBookmark">Back to last bookmark</button>
+          <button class="btn" id="btnWorldStart">Back to the start of this world</button>
+          <button class="btn danger restart" id="btnRestart">Start over</button>
+        </div>
+      </div>
+    </div>
+    <h3 style="margin-top:14px">Controls</h3>
+    <ul class="howto" id="howto"></ul>
+  </div>
+</section>
+
+<section class="sheet" id="sheetEnd" hidden>
+  <div class="leaf">
+    <h2 style="font-size:34px" id="endTitle">The drawing is whole again.</h2>
+    <p class="lede" id="endLede">All twelve scraps are back where they belong.</p>
+    <canvas class="endpic" id="endPic" width="720" height="450" aria-label="The finished drawing"></canvas>
+    <div class="gallery" id="endGallery" hidden></div>
+    <div class="stats" id="stats"></div>
+    <div class="row">
+      <button class="btn primary" id="btnNext">Turn the page: World 2</button>
+      <button class="btn primary" id="btnAgain" hidden>Back to the title page</button>
+      <button class="btn" id="btnLook">Keep exploring</button>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="modalPower" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="pwName">
+    <canvas id="pwIcon" width="152" height="152" aria-hidden="true"></canvas>
+    <div class="found">You found</div>
+    <h2 id="pwName">The Eraser</h2>
+    <p id="pwHow"></p>
+    <p class="keyline" id="pwKeys"></p>
+    <button class="btn primary" id="btnGotIt">Got it</button>
+  </div>
+</div>
+
+<script>
+/*SCRIPT*/
+</script>
