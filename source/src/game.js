@@ -6,7 +6,7 @@
   const BUILT = WL.map((w) => buildWorld(w.rooms));
   let wi = 0, world = BUILT[0];
   const STEP = 1000 / 60;
-  const MASTER_GAIN = 4.4;
+  const MASTER_GAIN = 13; // about 10 dB louder than before: the old mix was too quiet on computer speakers
   const SAVE_V1 = 'looseLeaf.save.v1', SAVE_KEY = 'looseLeaf.save.v2', SET_KEY = 'looseLeaf.settings.v1';
   const store = {
     get(k) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
@@ -1848,7 +1848,8 @@
   const SFX = (function () {
     let ac = null, out = null, nb = null;
     function unlock() {
-      if (ac) { if (ac.state === 'suspended' && !document.hidden) ac.resume(); return; }
+      // Safari can leave the sound 'interrupted' as well as 'suspended': wake it on any key, click or tap
+      if (ac) { if (ac.state !== 'running' && ac.state !== 'closed' && !document.hidden) ac.resume().catch(() => {}); return; }
       try {
         const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
         ac = new AC();
